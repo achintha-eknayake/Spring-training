@@ -1,6 +1,6 @@
 package com.example.springtraining.service;
 
-import com.example.springtraining.model.Student;
+import com.example.springtraining.entity.Student;
 import com.example.springtraining.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +29,9 @@ public class StudentService {
 
     public void deleteStudent(String id){
         studentRepository.deleteById(id);
+    }
+
+    public boolean isStudentExist(String id){
+        return studentRepository.existsById(id);
     }
 }

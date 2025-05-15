@@ -1,6 +1,7 @@
 package com.example.springtraining.controller;
 
-import com.example.springtraining.model.Student;
+import com.example.springtraining.entity.Student;
+import com.example.springtraining.exception.StudentNotFound;
 import com.example.springtraining.service.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,11 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable String id){
+    public ResponseEntity<Void> deleteStudent(@PathVariable String id){
+        if(!studentService.isStudentExist(id)){
+            throw new StudentNotFound("Student not found with given id:" + id);
+        }
         studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
     }
 }

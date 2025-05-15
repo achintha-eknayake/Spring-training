@@ -1,9 +1,8 @@
-package com.example.springtraining.model;
+package com.example.springtraining.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
 @Document(collection = "students")
 public class Student {
 
