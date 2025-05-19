@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
@@ -36,25 +37,22 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public StudentResponseDTO getStudentById(@PathVariable String id){
-        if(!studentService.isStudentExist(id)){
-            logger.warning("Student not found with given id:" + id);
-            throw new StudentNotFoundById("Student not found with given id:" + id);
-        }
+    public  StudentResponseDTO getStudentById(@PathVariable String id){
         logger.info("Getting student with id:" + id);
-        return studentService.getStudentById(id);
+        return studentService.getStudentById(id)
+                    .orElseThrow(() -> new StudentNotFoundById("Student not found with given id:" + id));
     }
 
     @PostMapping
     public ResponseEntity<StudentResponseDTO> saveStudent(@RequestBody StudentCreationRequestDTO studentCreationRequestDTO){
+
         if(studentCreationRequestDTO.dob() == null || studentCreationRequestDTO.name() == null){
             logger.warning("DOB , Name is missing");
             throw new InvalidInputException("Invalid input , name / dob is missing");
         }
         logger.info("Saving student:" + studentCreationRequestDTO.name());
         StudentResponseDTO studentResponseDTO = studentService.saveStudent(studentCreationRequestDTO);
-        URI location = URI.create("/student/" + studentCreationRequestDTO.id());
-        return ResponseEntity.created(location).body(studentResponseDTO);
+        return ResponseEntity.status(201).body(studentResponseDTO);
     }
 
     @DeleteMapping("/{id}")

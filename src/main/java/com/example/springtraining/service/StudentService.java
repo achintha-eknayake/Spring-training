@@ -8,6 +8,7 @@ import com.example.springtraining.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -26,10 +27,9 @@ public class StudentService {
         return StudentMapper.toAllStudentResponseDTO(studentRepository.findAll());
     }
 
-    public StudentResponseDTO getStudentById(String id){
-        Student student = studentRepository.findById(id).get();
+    public Optional<StudentResponseDTO> getStudentById(String id){
         logger.info("Getting student with id:" + id);
-        return StudentMapper.toStudentResponseDTO(student);
+        return studentRepository.findById(id).map(StudentMapper::toStudentResponseDTO);
     }
 
     public StudentResponseDTO saveStudent(StudentCreationRequestDTO studentCreationRequestDTO){
